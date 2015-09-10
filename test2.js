@@ -1,45 +1,36 @@
 QUnit.module('Step 0 -- Init');
-
+// QUnit.test('General initialization', function(assert){});
+// QUnit.test('Private stuff containment', function(assert){});
 
 
 QUnit.module('Step 1 -- Define');
-QUnit.test('Define one binding', function(assert){
-    var ui = new Sakuya.UI($('#qunit-fixture'));
-    ui.define('p1');
-    assert.equal(ui._.hasOwnProperty('p1'), true, 'Property added');
-    assert.equal(ui._.hasOwnProperty('p100'), false, 'No unexpected properties');
-});
 QUnit.test('Define multiple bindings', function(assert){
     var ui = new Sakuya.UI($('#qunit-fixture'));
     ui.define('p1');
     ui.define('p2');
-    ui.define('p3');
-    assert.equal(ui._.hasOwnProperty('p1'), true, 'Property 1 added');
-    assert.equal(ui._.hasOwnProperty('p2'), true, 'Property 2 added');
-    assert.equal(ui._.hasOwnProperty('p3'), true, 'Property 3 added');
+    console.log(ui._bindings.p1);
+    assert.equal(ui._bindings.hasOwnProperty('p1'), true, 'Property 1 binding added');
+    assert.equal(ui._bindings.hasOwnProperty('p2'), true, 'Property 2 binding added');    
 });
 QUnit.test('Define multiple binding in one go', function(assert){
     var ui = new Sakuya.UI($('#qunit-fixture'));
     ui.define('p1')
-      .define('p2')
-      .define('p3');
-    assert.equal(ui._.hasOwnProperty('p1'), true, 'Property 1 added');
-    assert.equal(ui._.hasOwnProperty('p2'), true, 'Property 2 added');
-    assert.equal(ui._.hasOwnProperty('p3'), true, 'Property 3 added');
+      .define('p2');
+    assert.equal(ui._bindings.hasOwnProperty('p1'), true, 'Property 1 binding added');
+    assert.equal(ui._bindings.hasOwnProperty('p2'), true, 'Property 2 binding added');          
 });
-QUnit.test('Store binding info', function(assert){
+QUnit.test('Check last defined binding', function(assert){
     var ui = new Sakuya.UI($('#qunit-fixture'));
     ui.define('p1');
-    assert.equal(ui._bindings.p1, {}, 'Binding storage created');
+    assert.equal(ui._lastDefinedProperty, 'p1', '_lastDefinedProperty reference updated (1)');
+    ui.define('p2');
+    assert.equal(ui._lastDefinedProperty, 'p2', '_lastDefinedProperty reference updated (2)');     
 });
-QUnit.test('Check last defined binding', function(assert){});
 QUnit.test('Prevent redefining bindings', function(assert){
     var ui = new Sakuya.UI($('#qunit-fixture'));
     ui.define('p1');
-    assert.throws(
-        function(){ ui.define('p1'); },
-        'Property "p1" is already defined',
-        'Property p1 already defined'
+    assert.throws(function(){ ui.define('p1'); },
+        'Property "p1" is already defined', 'Property p1 already defined'
     );
 });
 QUnit.test('Prevent incorrect names', function(assert){
@@ -74,11 +65,57 @@ QUnit.test('Chained define-as combo', function(assert){
     ui.define('p1').as('html')
       .define('p2').as('class');
     assert.equal(ui._bindings.p1.type, 'html', 'Property p1 bound as html');
-    assert.equal(ui._bindings.p2.type, 'html', 'Property p2 bound as html');
+    assert.equal(ui._bindings.p2.type, 'class', 'Property p2 bound as html');
 });
-QUnit.test('Store binding info', function(assert){});
-QUnit.test('Prevent multiple as\'ses', function(assert){});
-QUnit.test('Ensure correct definition order', function(assert){});
-QUnit.test('Ensure correct binding type', function(assert){});
-QUnit.test('Check binding functions existense', function(assert){});
-QUnit.test('', function(assert){});
+QUnit.test('Prevent multiple as\'ses', function(assert){
+    var ui = new Sakuya.UI($('#qunit-fixture'));
+    assert.throws(function(){ ui.define('p1').as('html').as('class'); },
+        "Multiple 'as' for single binding", "Multiple 'as' for single binding"
+    );            
+});
+QUnit.test('Ensure correct definition order', function(assert){
+    var ui = new Sakuya.UI($('#qunit-fixture'));
+    assert.throws(function(){ ui.as('html').define('p1'); },
+        "Setting binding's params before defining it", "Mixed up binding construction order"
+    );    
+});
+QUnit.test('Ensure correct binding type', function(assert){
+    var ui = new Sakuya.UI($('#qunit-fixture'));
+    assert.throws(function(){ ui.define('p1').as(''); },
+        "Incorrect property type", "Empty string in property type"
+    );      
+    assert.throws(function(){ ui.define('p1').as(undefined); },
+        "Incorrect property type", "Undefined in property type"
+    );
+    assert.throws(function(){ ui.define('p1').as(100500); },
+        "Incorrect property type", "Number in property type"
+    );     
+
+});
+QUnit.test('Check binding functions existense', function(assert){
+    var ui = new Sakuya.UI($('#qunit-fixture'));
+    var type, func;
+    for (type in ui._bindingTypes) {
+        func = ui._bindingTypes[type];
+        assert.equal(typeof(func), 'function', "Property type '" + type + "' exists");
+    }
+});
+
+
+// QUnit.test('', function(assert){});
+QUnit.module('Step 3 -- Of');
+QUnit.test('Single define-as-of combo', function(assert){
+    var ui = new Sakuya.UI($('#qunit-fixture'));
+});
+QUnit.test('Chained define-as-of combo', function(assert){
+    var ui = new Sakuya.UI($('#qunit-fixture'));
+});
+QUnit.test('Prevent multiple of\'s', function(assert){
+    var ui = new Sakuya.UI($('#qunit-fixture'));
+});
+QUnit.test('Ensure correct definition order', function(assert){
+    var ui = new Sakuya.UI($('#qunit-fixture'));
+});
+QUnit.test('Ensure correct selector type', function(assert){
+    var ui = new Sakuya.UI($('#qunit-fixture'));
+});

@@ -1,52 +1,75 @@
 var Sakuya = {};
 
-Sakuya.UI = function($root){
-    this.$root = $root;
+Sakuya.UI = function(rootElement){
     this._ = {};
+    this.rootElement = rootElement;
     this._bindings = {};
-    this._lastDefinedProperty = undefined;
+    this._lastDefinedProperty = null;
+    this._bindingTypes = {
+        'class': this._class,
+        'value': this._value,
+        'html': this._html,
+        'attr': this._attr
+    };
+    // Object.defineProperties(this, {
+    //     '_rootElement': {emumerable: false, writable: true, value: rootElement},
+    //     '_bindings': {emumerable: false, writable: true, value: {}},
+    //     '_lastDefinedProperty': {emumerable: false, writable: true, value: null},
+    //     '_bindingTypes': {emumerable: false, writable: true, value: {
+    //         'class': this._class,
+    //         'value': this._value,
+    //         'html': this._html,
+    //         'attr': this._attr
+    //     }}
+    // });    
 }
-
-// ui.define('text1').as('html').of('.fixture1')
-//   .value('Hello world!').convertWith(function(){}).listenTo(window, 'event')
-//   .end();
 
 Sakuya.UI.prototype.define = function(propertyName) {
     'use strict';
     if (typeof(propertyName) !== 'string' || propertyName.length === 0) {
         throw 'Incorrect property name';
     }
-    if (this._.hasOwnProperty(propertyName)) {
+    if (this._bindings.hasOwnProperty(propertyName)) {
         throw 'Property "' + propertyName + '" is already defined'
     }
-    Object.defineProperty(this._, propertyName, {
-        configurable: true,
-        enumerable: true,
-        value: 'NULL',
-        writable: true
-    });
+    this._bindings[propertyName] = {};
+    this._lastDefinedProperty = propertyName;
     return this;
 };
 
 Sakuya.UI.prototype.as = function(propertyType) {
     'use strict';
-
+    if (!this._lastDefinedProperty) {
+        throw "Setting binding's params before defining it";
+    }
+    if (this._bindings[this._lastDefinedProperty].hasOwnProperty('type')) {
+        throw "Multiple 'as' for single binding";
+    }
+    if (
+        typeof(propertyType) !== 'string' || 
+        propertyType.length === 0 || 
+        !this._bindingTypes.hasOwnProperty(propertyType)
+    ) {
+        throw 'Incorrect property type';
+    }    
+    this._bindings[this._lastDefinedProperty].type = propertyType;
+    return this;
 };
 
-Sakuya.UI.prototype.of = function(selector) {};
+Sakuya.UI.prototype.of = function(selector) {
+    'use strict';    
+};
+Sakuya.UI.prototype.value = function(value) {
+    'use strict';
+};
+Sakuya.UI.prototype.end = function() {
+    'use strict';    
+};
 
 
-
-
-Sakuya.UI.prototype.value = function(value) {};
 Sakuya.UI.prototype.convertWith = function(func) {};
 Sakuya.UI.prototype.listenTo = function(obj, eventName) {};
 Sakuya.UI.prototype.setCallback = function(func) {};
-
-Sakuya.UI.prototype.end = function() {};
-
-
-
 
 
 
