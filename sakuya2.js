@@ -21,7 +21,7 @@ Sakuya.UI = function(rootElement){
     //         'html': this._html,
     //         'attr': this._attr
     //     }}
-    // });    
+    // });
 }
 
 Sakuya.UI.prototype.define = function(propertyName) {
@@ -46,24 +46,24 @@ Sakuya.UI.prototype.as = function(propertyType) {
         throw "Multiple 'as' for single binding";
     }
     if (
-        typeof(propertyType) !== 'string' || 
-        propertyType.length === 0 || 
+        typeof(propertyType) !== 'string' ||
+        propertyType.length === 0 ||
         !this._bindingTypes.hasOwnProperty(propertyType)
     ) {
         throw 'Incorrect property type';
-    }    
+    }
     this._bindings[this._lastDefinedProperty].type = propertyType;
     return this;
 };
 
 Sakuya.UI.prototype.of = function(selector) {
-    'use strict';    
+    'use strict';
 };
 Sakuya.UI.prototype.value = function(value) {
     'use strict';
 };
 Sakuya.UI.prototype.end = function() {
-    'use strict';    
+    'use strict';
 };
 
 
@@ -71,10 +71,10 @@ Sakuya.UI.prototype.convertWith = function(func) {};
 Sakuya.UI.prototype.listenTo = function(obj, eventName) {};
 Sakuya.UI.prototype.setCallback = function(func) {};
 
+Sakuya.UI.prototype.multiSet = function(func) {};
 
 
-Sakuya.UI.prototype._html = function(){};
-Sakuya.UI.prototype._class = function(){};
-Sakuya.UI.prototype._value = function(){};
-Sakuya.UI.prototype._attr = function(){};
-
+Sakuya.UI.prototype._html = function(html){};
+Sakuya.UI.prototype._class = function(className, reverted){};
+Sakuya.UI.prototype._value = function(value){};
+Sakuya.UI.prototype._attr = function(attr){};
