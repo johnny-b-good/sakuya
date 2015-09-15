@@ -39,12 +39,6 @@ Sakuya.UI.prototype.define = function(propertyName) {
 
 Sakuya.UI.prototype.as = function(propertyType) {
     'use strict';
-    if (!this._lastDefinedProperty) {
-        throw "Setting binding's params before defining it";
-    }
-    if (this._bindings[this._lastDefinedProperty].hasOwnProperty('type')) {
-        throw "Multiple 'as' for single binding";
-    }
     if (
         typeof(propertyType) !== 'string' ||
         propertyType.length === 0 ||
@@ -52,12 +46,20 @@ Sakuya.UI.prototype.as = function(propertyType) {
     ) {
         throw 'Incorrect property type';
     }
+    if (!this._lastDefinedProperty) {
+        throw "Setting binding's params before defining it";
+    }
+    if (this._bindings[this._lastDefinedProperty].hasOwnProperty('type')) {
+        throw "Multiple 'as' for single binding";
+    }
     this._bindings[this._lastDefinedProperty].type = propertyType;
     return this;
 };
 
 Sakuya.UI.prototype.of = function(selector) {
     'use strict';
+    this._bindings[this._lastDefinedProperty].selector = selector;
+    return this;
 };
 Sakuya.UI.prototype.value = function(value) {
     'use strict';

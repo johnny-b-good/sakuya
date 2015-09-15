@@ -17,3 +17,12 @@ ui._.counterValue = 100500;
 ui._.testButtonVisible = true;
 
 ui.$text1 = 'some text';
+
+ui.compute('computedProperty')
+  .watch('prop1', 'prop2', 'prop3')
+  .callback(function(){
+      return this._.prop1 + this._.prop2 + this._.prop3;
+  })
+  .as('html')
+  .of('div.fixture1')
+  .end();
