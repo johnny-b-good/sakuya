@@ -58,6 +58,15 @@ Sakuya.UI.prototype.as = function(propertyType) {
 
 Sakuya.UI.prototype.of = function(selector) {
     'use strict';
+    if (typeof(selector) !== 'string' || selector.length === 0) {
+        throw 'Incorrect element selector';
+    }
+    if (!this._lastDefinedProperty) {
+        throw "Setting binding's params before defining it";
+    }
+    if (this._bindings[this._lastDefinedProperty].hasOwnProperty('selector')) {
+        throw "Multiple 'of' for single binding";
+    }
     this._bindings[this._lastDefinedProperty].selector = selector;
     return this;
 };

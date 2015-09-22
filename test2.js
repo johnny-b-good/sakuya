@@ -131,12 +131,12 @@ QUnit.test('Ensure correct definition order', function(assert){
 QUnit.test('Ensure correct selector type', function(assert){
     var ui = new Sakuya.UI($('#qunit-fixture'));
     assert.throws(function(){ ui.define('p1').as('html').of(''); },
-        "Incorrect selector", "Empty string as selector"
+        "Incorrect element selector", "Empty string as selector"
     );
     assert.throws(function(){ ui.define('p2').as('html').of(undefined); },
-        "Incorrect selector", "Undefined as selector"
+        "Incorrect element selector", "Undefined as selector"
     );
     assert.throws(function(){ ui.define('p3').as('html').of(100500); },
-        "Incorrect selector", "Number as selector"
+        "Incorrect element selector", "Number as selector"
     );
 });
